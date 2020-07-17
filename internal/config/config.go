@@ -7,13 +7,13 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/spf13/viper"
 	"github.com/thanhpk/randstr"
+	"github.com/toms1441/urlsh/internal/shortener"
 )
 
 type Config struct {
-	Domain        string `validate:"required" mapstructure:"domain"`
-	Sluglength    int    `validate:"required" mapstructure:"sluglength"`
-	Characters    string `validate:"required" mapstructure:"characters"`
-	SessionSecret string `validate:"required,len=32" mapstructure:"session_secret"`
+	Domain        string           `validate:"required" mapstructure:"domain"`
+	SessionSecret string           `validate:"required,len=32" mapstructure:"session_secret"`
+	Shortener     shortener.Config `validate:"required" mapstructure:"shortener"`
 }
 
 var validate *validator.Validate
@@ -27,8 +27,10 @@ func NewConfig() (c Config, err error) {
 
 	viper.SetDefault("domain", "http://localhost:8080")
 	viper.SetDefault("session_secret", randstr.String(32))
-	viper.SetDefault("sluglength", 4)
-	viper.SetDefault("characters", "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	viper.SetDefault("shortener", shortener.Config{
+		Length:     4,
+		Characters: "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+	})
 
 	// Initiate viper for our config
 	err = viper.ReadInConfig()

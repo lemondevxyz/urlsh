@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>add a url</title>
+		<link rel="stylesheet" href="/static/normalize.css">
+		<link rel="stylesheet" href="/static/skeleton.css">
+	</head>
+	<body>
+		<div class="container">
+			<h3>Add a url</h3>
+			<p>add a url to create a shortenered url</p>
+			<form method="post" action="/post" id="form" style="margin-bottom: 0px;" onsubmit="sendRequest()">
+				<input name="url" type="url" placeholder="url">
+				<button value="submit" class="button-primary">
+					submit
+				</button>
+			</form>
+			<a id="changethis">your new url</a>
+		</div>
+		<script type="text/javascript">
+var form = document.getElementById("form");
+var elem = document.getElementById("changethis");
+var req = new XMLHttpRequest();
+
+req.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		// Typical action to be performed when the document is ready:
+		document.getElementById("elem").href = req.responseText;
+		return
+	}
+
+	console.log(this.readystatus, this.status, req.responseText);
+};
+
+function sendRequest(ev) {
+	ev.preventDefault();
+	console.log("adwwdawad")
+
+	return false
+	/*
+	req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	req.open("POST", "post", true);
+	req.send(new FormData(form));
+	*/
+}
+		</script>
+	</body>
+</html>

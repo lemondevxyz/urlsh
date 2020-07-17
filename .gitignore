@@ -1,2 +1,5 @@
 # ignore config.yaml
 config.yaml
+
+# ignore database
+db
