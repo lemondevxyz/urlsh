@@ -9,6 +9,8 @@ type Repository interface {
 	Remove(id string) error
 	// Get fetches a model from the repository
 	Get(id string) (Model, error)
+	// GetAll fetches all models from the repository
+	GetAll() ([]Model, error)
 	// Update updates a model in the repository
 	Update(id string, m Model) error
 }

@@ -10,8 +10,8 @@
 		<div class="container">
 			<h3>Add a url</h3>
 			<p>add a url to create a shortenered url</p>
-			<form method="post" action="/post" id="form" style="margin-bottom: 0px;" onsubmit="sendRequest()">
-				<input name="url" type="url" placeholder="url">
+			<form method="post" action="/post" id="form" style="margin-bottom: 0px;">
+				<input id="url" name="url" type="url" placeholder="URL">
 				<button value="submit" class="button-primary">
 					submit
 				</button>
@@ -20,29 +20,39 @@
 		</div>
 		<script type="text/javascript">
 var form = document.getElementById("form");
+form.addEventListener("submit", function(evt){
+	evt.preventDefault();
+
+	sendRequest();
+})
+
 var elem = document.getElementById("changethis");
-var req = new XMLHttpRequest();
 
-req.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		// Typical action to be performed when the document is ready:
-		document.getElementById("elem").href = req.responseText;
-		return
-	}
+function sendRequest() {
+	var req = new XMLHttpRequest();
 
-	console.log(this.readystatus, this.status, req.responseText);
-};
+	req.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			// Typical action to be performed when the document is ready:
+			//console.log("success", req.responseText);
 
-function sendRequest(ev) {
-	ev.preventDefault();
-	console.log("adwwdawad")
+			elem.innerText = req.responseText;
+			elem.href = "/redirect/"+req.responseText;
 
-	return false
-	/*
-	req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	req.open("POST", "post", true);
-	req.send(new FormData(form));
-	*/
+			return
+		}
+
+		console.log(this.readystatus, this.status, req.responseText);
+	};
+
+	//req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+	var data = new FormData(form);
+	// https://www.google.com
+
+	//req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	req.open("POST", "post", false);
+	req.send(data);
 }
 		</script>
 	</body>

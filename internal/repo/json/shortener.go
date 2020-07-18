@@ -1,6 +1,7 @@
 package json
 
 import (
+	"encoding/json"
 	"fmt"
 
 	nanobox "github.com/nanobox-io/golang-scribble"
@@ -88,6 +89,31 @@ func (sr *shortenerRepository) Get(id string) (shortener.Model, error) {
 
 	return model, nil
 
+}
+
+func (sr *shortenerRepository) GetAll() ([]shortener.Model, error) {
+
+	models := []shortener.Model{}
+	if sr.db == nil {
+		return models, repo.ErrInvalidRepository
+	}
+
+	ids, err := sr.db.ReadAll(shortenersCollection)
+	if err != nil {
+		return models, fmt.Errorf("sr.db.ReadAll: %w", err)
+	}
+
+	for _, v := range ids {
+
+		newmodel := shortener.Model{}
+		err = json.Unmarshal([]byte(v), &newmodel)
+
+		if err == nil {
+			models = append(models, newmodel)
+		}
+	}
+
+	return models, nil
 }
 
 func (sr *shortenerRepository) Update(id string, m shortener.Model) error {

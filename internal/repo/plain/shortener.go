@@ -65,6 +65,21 @@ func (sr *shortenerRepository) Get(id string) (shortener.Model, error) {
 	return model, nil
 }
 
+func (sr *shortenerRepository) GetAll() ([]shortener.Model, error) {
+	models := []shortener.Model{}
+	if sr.db == nil {
+		return models, repo.ErrInvalidRepository
+	}
+
+	sr.mtx.Lock()
+	defer sr.mtx.Unlock()
+	for _, v := range sr.db {
+		models = append(models, v)
+	}
+
+	return models, nil
+}
+
 func (sr *shortenerRepository) Update(id string, m shortener.Model) error {
 
 	if sr.db == nil {

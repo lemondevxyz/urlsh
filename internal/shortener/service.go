@@ -3,6 +3,7 @@ package shortener
 import (
 	"errors"
 	"fmt"
+	"net/url"
 
 	"github.com/go-playground/validator"
 	"github.com/thanhpk/randstr"
@@ -50,14 +51,33 @@ func NewService(srepo Repository, config Config) (Service, error) {
 	return s, nil
 }
 
-func (s *service) NewShortener(url string) (m Model, err error) {
+func (s *service) NewShortener(urlstr string) (m Model, err error) {
+
+	ms, err := s.repo.GetAll()
+	// check if url shortener exists
+	fmt.Println(ms, err)
+	if err == nil {
+		for _, v := range ms {
+			if v.URLString == urlstr {
+				return v, nil
+			}
+		}
+	}
+
 	id := randstr.String(s.config.Length, s.config.Characters)
 
 	model := Model{
 		ID:        id,
-		URLString: url,
+		URLString: urlstr,
 	}
 
+	curl, err := url.Parse(urlstr)
+	if err != nil {
+		err = fmt.Errorf("invalid url")
+		return
+	}
+
+	model.URLString = curl.String()
 	if err = model.Validate(); err != nil {
 		return
 	}
